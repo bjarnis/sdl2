@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <meta charset="UTF-8" >
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tower Attack</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            #canvas-game {
+                border: 2px solid black;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                translate: -50% -50%;
+                max-width: 95%;
+                max-height: 95%;
+            }
+            .assets {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canvas-game"></canvas>
+        <div class="assets">
+            <img src="assets/full_map.png" id="full_map" />
+        </div>
+        <!-- script src="game.js" type="module"></script -->
+        <script type="module">
+            import { Game, Config } from "./game.js";
+            let cx, cy, cw, ch;
+            function toggleFullScreen() {
+                const canvas = document.getElementById("canvas-game");
+                if (!document.fullscreenElement) {
+                    canvas.top = 0;
+                    canvas.left = 0;
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                    document.documentElement.requestFullscreen();
+                }
+                else if (document.exitFullscreen) {
+                    canvas.top = cx;
+                    canvas.left = cy;
+                    canvas.width = cw;
+                    canvas.height = ch;
+                    document.exitFullscreen();
+                }
+            }
+            window.addEventListener('load', function(){
+                
+                const canvas = document.getElementById("canvas-game");
+                const ctx = canvas.getContext('2d');
+                canvas.width = Config.GAME_WIDTH;
+                canvas.height = Config.GAME_HEIGHT;
+                
+                const canvasRect = canvas.getBoundingClientRect();
+                cx = canvasRect.x;
+                cy = canvasRect.y;
+                cw = canvasRect.width;
+                ch = canvasRect.height;
+                console.log(cx, cy, cw, ch);
+
+                const game = new Game(canvas, ctx);
+                game.start();
+                //ctx.drawImage(image, 0, 0);
+                document.getElementById("fullscreen").onclick = function(){toggleFullScreen();};
+            });
+        </script>
+        
+        <a href="#" id="fullscreen">fullscreen</a>
+    </body>
+</html>
